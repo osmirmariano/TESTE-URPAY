@@ -1,0 +1,6 @@
+Incremento a mais para o teste;
+
+Criar um Schema para o proprietário com nome e cpf;
+Cada veículo vai ter um proprietário;
+
+Ao digitar o CPF do proprietario irá buscar as informações delete e fazer o cadastro

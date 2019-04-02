@@ -33,8 +33,15 @@ const VeiculosSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    revisoes: [RevisoesSchema]
-})
+    revisoes: [RevisoesSchema],
+    proprietario: ProprietarioSchema
+});
+
+//Declaração do Schema para o proprietário do veículo
+const ProprietarioSchema = new mongoose.Schema({
+    nome: String,
+    cpf: String,
+});
 
 //Exportando o model para ser acessado por toda a aplicação
 mongoose.model("Veiculos", VeiculosSchema);

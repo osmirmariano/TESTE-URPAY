@@ -2,6 +2,11 @@ const mongoose = require('mongoose');
 const Veiculos = mongoose.model('Veiculos');
 
 module.exports = {
+    
+    async criarProprietario(req, res){
+
+    },
+
     /**
      * Método para listar todos os veículos cadastrados
      * @param {*} req 
@@ -149,5 +154,4 @@ module.exports = {
         ]);
         return res.json(veiculo);
     }
-
 }
