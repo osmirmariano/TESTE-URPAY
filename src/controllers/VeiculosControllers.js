@@ -13,8 +13,12 @@ module.exports = {
      * @param {*} res 
      */
     async listarTodosVeiculos(req, res){
-        const veiculo = await Veiculos.find();
-        return res.json(veiculo);
+        try {
+            const veiculo = await Veiculos.find();
+            return res.status(200).json(veiculo);
+        } catch (error) {
+            return res.status(400).json(error);
+        }
     },
 
     /**
@@ -24,15 +28,19 @@ module.exports = {
      */
     async cadastroVeiculos(req, res){
         let regex = /^[a-zA-Z]{3}[0-9]{4}$/;
-        if(!regex.test(req.body.placa)){
-            return res.json({
-                erro: 'Placa Inválida, a placa não atende ao padrão.'
-            });
-        }
-        else{
-            const veiculos = await Veiculos.create(req.body);
-            return res.json(veiculos);
-        }
+        try {
+            if(!regex.test(req.body.placa)){
+                return res.json({
+                    erro: 'Placa Inválida, a placa não atende ao padrão.'
+                });
+            }
+            else{
+                const veiculos = await Veiculos.create(req.body);
+                return res.status(200).json(veiculos);
+            }
+        } catch (error) {
+            return res.status(400).json(error);
+        }  
     },
 
     /**
@@ -41,11 +49,15 @@ module.exports = {
      * @param {*} res 
      */
     async consultarVeiculoPlaca(req, res){
-        const veiculo = await Veiculos.find(
-            { 
-                placa: req.params.placa 
-            });
-        return res.json(veiculo);
+        try {
+            const veiculo = await Veiculos.find(
+                { 
+                    placa: req.params.placa 
+                });
+            return res.status(200).json(veiculo);
+        } catch (error) {
+            return res.status(400).json(error);
+        }
     },
 
     /**
@@ -54,14 +66,18 @@ module.exports = {
      * @param {*} res 
      */
     async editarVeiculosPlaca(req, res){
-        const veiculo = await Veiculos.findOneAndUpdate({ 
+        try {
+            const veiculo = await Veiculos.findOneAndUpdate({ 
                 placa: req.params.placa 
             }, 
             req.body, 
             { 
                 new: true 
             });
-        return res.json(veiculo);
+            return res.status(200).json(veiculo);
+        } catch (error) {
+            return res.status(400).json(error);
+        }
     },
 
     /**
@@ -70,13 +86,17 @@ module.exports = {
      * @param {*} res 
      */
     async deletarVeiculoPlaca(req, res){
-        await Veiculos.findOneAndDelete(
-            { 
-                placa: req.params.placa 
+        try {
+            await Veiculos.findOneAndDelete(
+                { 
+                    placa: req.params.placa 
+                });
+            return res.status(200).json({
+                sucesso: "Veículo Deletado com sucesso!"
             });
-        return res.json({
-            sucesso: "Veículo Deletado com sucesso!"
-        });
+        } catch (error) {
+            return res.status(400).json(error);
+        }
     },
 
     /**
@@ -85,11 +105,15 @@ module.exports = {
      * @param {*} res 
      */
     async filtrosMarca(req, res){
-        const veiculo = await Veiculos.find(
-            { 
-                marca: req.params.marca 
-            });
-        return res.json(veiculo);
+        try {
+            const veiculo = await Veiculos.find(
+                { 
+                    marca: req.params.marca 
+                });
+            return res.status(200).json(veiculo);
+        } catch (error) {
+            return res.status(400).json(error);
+        }
     },
 
     /**
@@ -98,11 +122,15 @@ module.exports = {
      * @param {*} res 
      */
     async filtroCor(req, res){
-        const veiculo = await Veiculos.find(
-            { 
-                cor: req.params.cor 
-            });
-        return res.json(veiculo);
+        try {
+            const veiculo = await Veiculos.find(
+                { 
+                    cor: req.params.cor 
+                });
+            return res.status(200).json(veiculo);
+        } catch (error) {
+            return res.status(400).json(error);
+        }
     },
 
 
@@ -112,17 +140,22 @@ module.exports = {
      * @param {*} res 
      */
     async adicionarRevisao(req, res){
-        const veiculo = await Veiculos.update(
-            {
-                placa: req.params.placa
-            },
-            { 
-                $push: { revisoes: { 'data_revisao': req.body.data_revisao, 'valor': req.body.valor }}
-            }, 
-            { 
-                new: true 
-            });
-        return res.json(veiculo);
+        try {
+            const veiculo = await Veiculos.update(
+                {
+                    placa: req.params.placa
+                },
+                { 
+                    $push: { revisoes: { 'data_revisao': req.body.data_revisao, 'valor': req.body.valor }}
+                }, 
+                { 
+                    new: true 
+                });
+            return res.status(200).json(veiculo);
+        } catch (error) {
+            return res.status(400).json(error);
+        }
+        
     },
 
     /**
@@ -131,13 +164,17 @@ module.exports = {
      * @param {*} res 
      */
     async consultarTotalPlaca(req, res){
-        const veiculo = await Veiculos.aggregate([
-            { $match: {"placa": req.params.placa }},
-            { $project : {
-                _id : "$revisoes", total : { $sum : "$revisoes.valor" } 
-            }}
-        ]);
-        return res.json(veiculo);
+        try {
+            const veiculo = await Veiculos.aggregate([
+                { $match: {"placa": req.params.placa }},
+                { $project : {
+                    _id : "$revisoes", total : { $sum : "$revisoes.valor" } 
+                }}
+            ]);
+            return res.status(200).json(veiculo);
+        } catch (error) {
+            return res.status(400).json(error);
+        }
     },
 
     /**
@@ -146,12 +183,17 @@ module.exports = {
      * @param {*} res 
      */
     async consultarTotalMarca(req, res){
-        const veiculo = await Veiculos.aggregate([
-            { $match: { "marca": req.params.marca }},
-            { $project : {
-                _id : "$revisoes", total : { $sum : "$revisoes.valor" } 
-            }}
-        ]);
-        return res.json(veiculo);
+        try {
+            const veiculo = await Veiculos.aggregate([
+                { $match: { "marca": req.params.marca }},
+                { $project : {
+                    _id : "$revisoes", total : { $sum : "$revisoes.valor" } 
+                }}
+            ]);
+            return res.status(200).json(veiculo);
+        } catch (error) {
+            return res.status(400).json(error);
+        }
+        
     }
 }
